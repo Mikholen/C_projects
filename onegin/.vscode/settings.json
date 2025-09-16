@@ -1,0 +1,8 @@
+{
+    "files.associations": {
+        "preambule.h": "c",
+        "stdlib.h": "c",
+        "ctype.h": "c",
+        "stdbool.h": "c"
+    }
+}
