@@ -1,28 +1,27 @@
 #include <stdio.h>
 #include <ctype.h>
+#include <stdlib.h>
 #include <stdbool.h>
 #include "preambule.h"
 
-void swap_values_in_array (struct pointer_and_length *array, int i, int j) {
+void swap_values_in_array (pointer_and_length *array, int i, int j) {
     
-    struct pointer_and_length tmp = array[j];
+    pointer_and_length tmp = array[j];
     array[j] = array[i];
     array[i] = tmp;
 }
 
-bool need_to_swap_for_classic_alphabet_order (int ind_1, int ind_2, struct pointer_and_length *pointers_array) {
+bool need_to_swap_for_classic_alphabet_order (int ind_1, int ind_2, pointer_and_length *pointers_array) {
 
     for (int t_1 = 0, t_2 = 0; (t_1 < pointers_array[ind_1].line_length) && 
                                (t_2 < pointers_array[ind_2].line_length); t_1++, t_2++) {
 
-        if ((pointers_array[ind_1].line_pointer[t_1] < 'A') && (pointers_array[ind_1].line_pointer[t_1] != '\n') && 
-            (pointers_array[ind_1].line_pointer[t_1] != '\0') && (pointers_array[ind_1].line_pointer[t_1] != '\r')) {
+        if (!isalpha (pointers_array[ind_1].line_pointer[t_1])) {
 
             t_1++;
         }
 
-        if ((pointers_array[ind_2].line_pointer[t_2] < 'A') && (pointers_array[ind_2].line_pointer[t_2] != '\n') && 
-            (pointers_array[ind_2].line_pointer[t_2] != '\0') && (pointers_array[ind_2].line_pointer[t_2] != '\r')) {
+        if (!isalpha (pointers_array[ind_2].line_pointer[t_2])) {
 
             t_2++;
         }
@@ -43,28 +42,22 @@ bool need_to_swap_for_classic_alphabet_order (int ind_1, int ind_2, struct point
     return false;
 }
 
-bool need_to_swap_for_reverse_alphabet_order (int ind_1, int ind_2, struct pointer_and_length *pointers_array) {
+bool need_to_swap_for_reverse_alphabet_order (int ind_1, int ind_2, pointer_and_length *pointers_array) {
 
     if (pointers_array[ind_2].line_length == 2) {
 
         return true;
     }
 
-    for (int t_1 = 2, t_2 = 2; (t_1 <= pointers_array[ind_1].line_length) && 
+    for (int t_1 = 1, t_2 = 1; (t_1 <= pointers_array[ind_1].line_length) && 
                                (t_2 <= pointers_array[ind_2].line_length); t_1++, t_2++) {
 
-        if ((pointers_array[ind_1].line_pointer[pointers_array[ind_1].line_length - t_1] < 'A') && 
-            (pointers_array[ind_1].line_pointer[pointers_array[ind_1].line_length - t_1] != '\n') && 
-            (pointers_array[ind_1].line_pointer[pointers_array[ind_1].line_length - t_1] != '\0') && 
-            (pointers_array[ind_1].line_pointer[pointers_array[ind_1].line_length - t_1] != '\r')) {
+        if (!isalpha (pointers_array[ind_1].line_pointer[pointers_array[ind_1].line_length - t_1])) {
 
             t_1++;
         }
 
-        if ((pointers_array[ind_2].line_pointer[pointers_array[ind_2].line_length - t_2] < 'A') && 
-            (pointers_array[ind_2].line_pointer[pointers_array[ind_2].line_length - t_2] != '\n') && 
-            (pointers_array[ind_2].line_pointer[pointers_array[ind_2].line_length - t_2] != '\0') && 
-            (pointers_array[ind_2].line_pointer[pointers_array[ind_2].line_length - t_2] != '\r')) {
+        if (!isalpha (pointers_array[ind_2].line_pointer[pointers_array[ind_2].line_length - t_2])) {
 
             t_2++;
         }
@@ -85,7 +78,7 @@ bool need_to_swap_for_reverse_alphabet_order (int ind_1, int ind_2, struct point
     return false;
 }
 
-void bubble_sort (struct pointer_and_length *pointers_array, int num_lines, bool (*need_to_swap) (int, int, struct pointer_and_length *)) {
+void bubble_sort (pointer_and_length *pointers_array, int num_lines, bool (*need_to_swap) (int, int, pointer_and_length *)) {
 
     for (int ind_1 = 0; ind_1 + 1 < num_lines; ind_1++) {
 

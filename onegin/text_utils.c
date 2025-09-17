@@ -9,7 +9,7 @@ void print_initial_text (char *text) {
     printf ("%s", text);
 }
 
-void print_sorted_text (struct pointer_and_length *pointers_array, int num_lines) {
+void print_sorted_text (pointer_and_length *pointers_array, int num_lines) {
 
     for (int i = 0; i < num_lines; i++) {
 
@@ -19,7 +19,7 @@ void print_sorted_text (struct pointer_and_length *pointers_array, int num_lines
     }
 }
 
-void print_line_tioma_asked_for_long_function_title_so_here_it_is_enjoy (struct pointer_and_length value, char letter) {
+void print_line_tioma_asked_for_long_function_title_so_here_it_is_enjoy (pointer_and_length value, char letter) {
 
     for (int i = 0; i < value.line_length; i++) {
 
@@ -73,9 +73,9 @@ int count_lines (char *text, size_t text_size) {
     return num_lines;
 }
 
-struct pointer_and_length *create_pointers_array (char *text, size_t text_size, int num_lines) {
+pointer_and_length *create_pointers_array (char *text, size_t text_size, int num_lines) {
 
-    struct pointer_and_length *pointers_array = (struct pointer_and_length *)calloc ((size_t)num_lines, sizeof (struct pointer_and_length));
+    pointer_and_length *pointers_array = (pointer_and_length *)calloc ((size_t)num_lines, sizeof (pointer_and_length));
 
     int pointer_number = 0;
 
