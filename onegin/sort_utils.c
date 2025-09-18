@@ -5,16 +5,16 @@
 
 void swap_values_in_array (void *array, size_t arr_elem_size, int i, int j) {
     
-    unsigned char *arr = (unsigned char *)array;
-    unsigned char *a = arr + i * arr_elem_size;
-    unsigned char *b = arr + j * arr_elem_size;
+    // unsigned char *arr = (pointer_and_length *)array;
+    // unsigned char *a = arr + i * arr_elem_size;
+    // unsigned char *b = arr + j * arr_elem_size;
 
-    for (size_t k = 0; k < arr_elem_size; k++) {
+    // for (size_t k = 0; k < arr_elem_size; k++) {
 
-        unsigned char tmp = a[k];
-        a[k] = b[k];
-        b[k] = tmp; 
-    }
+    pointer_and_length tmp = ((pointer_and_length *)array)[i];
+    ((pointer_and_length *)array)[i] = ((pointer_and_length *)array)[j];
+    ((pointer_and_length *)array)[j] = tmp; 
+    // }
 }
 
 int need_to_swap_for_classic_alphabet_order (const void *elem_1, const void *elem_2) {
