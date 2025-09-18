@@ -19,7 +19,7 @@ void print_sorted_text (pointer_and_length *pointers_array, int num_lines) {
     }
 }
 
-void print_line_tioma_asked_for_long_function_title_so_here_it_is_enjoy (pointer_and_length value, char letter) {
+void print_line (pointer_and_length value, char letter) {
 
     for (int i = 0; i < value.line_length; i++) {
 

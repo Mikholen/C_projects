@@ -15,7 +15,8 @@ int main () {
 
     pointer_and_length *lines_pointers_and_len = create_pointers_array (initial_text, text_size, num_lines);
 
-    bubble_sort (lines_pointers_and_len, num_lines, need_to_swap_for_classic_alphabet_order);
+    qsort (lines_pointers_and_len, num_lines, sizeof (lines_pointers_and_len[0]), need_to_swap_for_reverse_alphabet_order);
+    // bubble_sort (lines_pointers_and_len, num_lines, sizeof (lines_pointers_and_len[0]), need_to_swap_for_reverse_alphabet_order);
     print_sorted_text (lines_pointers_and_len, num_lines);
 
     print_initial_text (initial_text);
