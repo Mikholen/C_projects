@@ -58,11 +58,6 @@ int need_to_swap_for_reverse_alphabet_order (const void *elem_1, const void *ele
     
     if ((*element_2).line_length == 2) {
 
-        // printf ("** ");
-        // print_line (*element_1, 'c');
-        // printf ("** ");
-        // print_line (*element_2, 'c');
-
         return 1;
     }
 
@@ -95,7 +90,7 @@ int need_to_swap_for_reverse_alphabet_order (const void *elem_1, const void *ele
     return -1;
 }
 
-void bubble_sort (void *pointers_array, int num_lines, size_t arr_elem_size, int (*need_to_swap) (const void *, const void *)) {
+void bubble_sort (void *pointers_array, int num_lines, size_t arr_elem_size, int (*need_to_swap) (const void *, const void *), void (*swap_values_in_array) (void *, size_t, int, int)) {
 
     for (int ind_1 = 0; ind_1 + 1 < num_lines; ind_1++) {
 
@@ -104,14 +99,6 @@ void bubble_sort (void *pointers_array, int num_lines, size_t arr_elem_size, int
             if (need_to_swap ((char *)pointers_array + ind_2 * arr_elem_size, (char *)pointers_array + (ind_2 + 1) * arr_elem_size) >= 0) {
 
                 swap_values_in_array (pointers_array, arr_elem_size, ind_2, ind_2 + 1);
-
-                const pointer_and_length *element_1 = (const pointer_and_length *)((char *)pointers_array + ind_2 * arr_elem_size);
-                const pointer_and_length *element_2 = (const pointer_and_length *)((char *)pointers_array + (ind_2 + 1) * arr_elem_size);
-
-                // printf ("-> ");
-                // print_line (*element_1, 'c');
-                // printf ("-> ");
-                // print_line (*element_2, 'c');
             }
         }
     }
