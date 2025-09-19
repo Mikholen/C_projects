@@ -1,10 +1,8 @@
-struct pointer_and_length {
+typedef struct pointer_and_length {
 
     char *line_pointer;
     int line_length;
-};
-
-typedef struct pointer_and_length pointer_and_length;
+} pointer_and_length;
 
 void print_initial_text (char *text);
 void print_line (pointer_and_length value, char letter);
