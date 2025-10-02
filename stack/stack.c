@@ -2,92 +2,139 @@
 
 const int KANAREIKA = 9327645;
 const int N_KANAREEK = 2;
+const size_t INITIAL_SIZE = 48;
 
-void create_stack (Stack_info *stack, size_t max_size) {
+void create_stack (Stack_info *stack, const size_t max_size) {
 
-    (*stack).n_elements = (size_t )0;
-    (*stack).max_size = max_size;
-    (*stack).hash = hash_function ((*stack).n_elements, (*stack).max_size);
-    int *arr = (int *)calloc (N_KANAREEK, sizeof(int));
-    arr[0] = arr[1] = KANAREIKA;
-    (*stack).data = arr;
-    (*stack).data_len = N_KANAREEK;
-}
+    if (max_size <= 0) {
 
-long long int hash_function (size_t n_elements, size_t max_size) {
-
-    return llabs (n_elements * (max_size - (n_elements % max_size)) + 81);
-}
-
-void push_back (Stack_info *stack, int element) {
-
-    if (((*stack).n_elements + 1) > (*stack).max_size) {
-
-        printf ("Stack overfull can not push element *-*\n");
+        printf ("Unable to create stack with maximum size <= 0 *-*\n");
     }
 
-    else if (((*stack).n_elements + 1 + N_KANAREEK) > (*stack).data_len) {
+    else if (((sizeof (*stack)) != INITIAL_SIZE) || (stack == NULL)) {
 
-        (*stack).data_len = ((*stack).n_elements + N_KANAREEK) * 2;
+        printf ("%lu\n", (sizeof (*stack)));
 
-        int *arr = (int *)calloc (((*stack).n_elements + N_KANAREEK) * 2, sizeof(int));
-        for (size_t i = 0; i < (*stack).n_elements + N_KANAREEK; i++) {
+        printf ("Invalid input *-*\n");
+    }
 
-            arr[i] = (*stack).data[i];
-        }
-        
-        arr[(*stack).n_elements + 1] = element;
-        arr[(*stack).n_elements + 2] = KANAREIKA;
-        (*stack).n_elements++;
+    else { 
 
-        free((*stack).data);
-        (*stack).data = arr;
-    } 
+        stack->n_elements = (size_t )0;
+        stack->max_size = max_size;
+        stack->data = (int *)calloc (N_KANAREEK, sizeof(int));
+        stack->data[0] = stack->data[1] = KANAREIKA;
+        stack->data_len = N_KANAREEK;
+
+        stack->hash_sizes = hash_func_sizes (stack);
+        stack->hash_arr = hash_func_arr (stack);
+    }
+}
+
+size_t hash_func_sizes (const Stack_info *stack) {
+
+    return (stack->n_elements + stack->max_size + stack->data_len);
+}
+
+int hash_func_arr (const Stack_info *stack) {
+
+    int return_val = 0;
+
+    for (size_t i = 1; i < stack->n_elements; i++) {
+
+        return_val += stack->data[i];
+    }
+
+    return return_val;
+}
+
+void push_back (Stack_info *stack, const int element) {
+
+    if (!stack_check (stack)) {
+
+        printf ("Stack has been spoiled *-*\n");
+    }
 
     else {
 
-        (*stack).data[(*stack).n_elements + 1] = element;
-        (*stack).data[(*stack).n_elements + 2] = KANAREIKA;
-        (*stack).n_elements++;
+        if ((stack->n_elements + 1) > stack->max_size) {
+
+            printf ("Stack overfull can not push element *-*\n");
+        }
+
+        else {
+
+            if ((stack->n_elements + 1 + N_KANAREEK) > stack->data_len) {
+
+                reallocate_memory (stack, (stack->n_elements + N_KANAREEK) * 2);
+            }
+            
+            (stack->data)[stack->n_elements + N_KANAREEK - 1] = element;
+            (stack->data)[stack->n_elements + N_KANAREEK] = KANAREIKA;
+            stack->n_elements++;
+        }
     }
+
+    stack->hash_arr = hash_func_arr (stack);
+    stack->hash_sizes = hash_func_sizes (stack);
 }
 
 int pop (Stack_info *stack) {
 
-    if ((*stack).n_elements == 0) {
+    if (!stack_check (stack)) {
 
-        printf ("Stack is empty nothing to pop *-*");
+        printf ("Stack has been spoiled *-*");
+    }
+
+    if (stack->n_elements == 0) {
+
+        printf ("Stack is empty nothing to pop *-*\n");
         return 0;
     }
 
-     else {
+    else {
 
-        int value = (*stack).data[(*stack).n_elements];
+        reallocate_memory (stack, stack->n_elements + N_KANAREEK - 1);
 
-        int *arr = (int *)calloc (((*stack).n_elements + N_KANAREEK) - 1, sizeof(int));
-        for (size_t i = 0; i < (*stack).n_elements + N_KANAREEK - 2; i++) {
-
-            arr[i] = (*stack).data[i];
-        }
-        
-        arr[(*stack).n_elements] = KANAREIKA;
-        (*stack).n_elements--;
-
-        free((*stack).data);
-        (*stack).data = arr;
+        int value = stack->data[stack->n_elements];        
+        stack->data[stack->n_elements] = KANAREIKA;
+        stack->n_elements--;
 
         print_stack (stack);
 
         return value;
     }
+
+    stack->hash_sizes = hash_func_sizes (stack);
+    stack->hash_arr = hash_func_arr (stack);
 }
 
-void print_stack (Stack_info *stack) {
+void print_stack (const Stack_info *stack) {
 
-    for (size_t i = 0; i < (*stack).n_elements + 2; i++) {
+    for (size_t i = 0; i < stack->n_elements + N_KANAREEK; i++) {
 
-        printf ("%d ", (*stack).data[i]);
+        printf ("%d ", stack->data[i]);
     }
 
     printf ("\n");
+}
+
+void reallocate_memory (Stack_info *stack, size_t new_len) {
+
+    stack->data_len = new_len;
+    stack->data = (int *)realloc (stack->data,new_len);
+}
+
+bool stack_check (const Stack_info *stack) {
+
+    if ((stack->data[stack->n_elements + 1] == KANAREIKA) && (stack->data[0] == KANAREIKA) 
+        && (stack->hash_arr == hash_func_arr (stack)) && (stack->hash_sizes == hash_func_sizes (stack))) {
+
+            return true;
+    }
+
+    else {
+
+        return false;
+    }
 }
