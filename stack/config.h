@@ -1,4 +1,4 @@
-#define CHICKEN
+// #define CHICKEN
 #define SAUSAGE
 
 typedef int elem_type;

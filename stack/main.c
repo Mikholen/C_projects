@@ -2,7 +2,7 @@
 
 int main () {
 
-    size_t max_size = 6;
+    size_t max_size = 10;
     Stack_info stack = {};
 
     dump (create_stack (&stack, max_size));
@@ -12,12 +12,20 @@ int main () {
 
     int me = 0;
 
-    for (int i = 0; i < 2; i++) {
+    for (int i = 0; i < 7; i++) {
 
         scanf ("%d", &me);
         dump (push_back (&stack, me));
         print_stack (&stack);
-        stack.data[0] = 1;
+
+    }
+
+    for (int i = 0; i < 7; i++) {
+
+        // scanf ("%d", &me);
+        dump (pop (&stack, &me));
+        printf ("%d\n", me);
+        print_stack (&stack);
 
     }
 

@@ -45,39 +45,40 @@ error_code_type create_stack (Stack_info *stack, const size_t max_size) {
 }
 
 #ifdef SAUSAGE
-    size_t hash_func_stack (const Stack_info *stack) {
+size_t hash_func_stack (const Stack_info *stack) {
 
 #ifdef CHICKEN
-        return (stack->n_elements + stack->max_size + stack->data_len + 
-            (size_t)stack->data + (size_t)stack->kanareika_begin + (size_t)stack->kanareika_end);
+    return (stack->n_elements + stack->max_size + stack->data_len + 
+        (size_t)stack->data + (size_t)stack->kanareika_begin + (size_t)stack->kanareika_end);
 #else
-        return (stack->n_elements + stack->max_size + stack->data_len + (size_t)stack->data);
+    return (stack->n_elements + stack->max_size + stack->data_len + (size_t)stack->data);
 #endif
-    }
+}
 
-    elem_type hash_func_arr (const Stack_info *stack) {
+elem_type hash_func_arr (const Stack_info *stack) {
 
-        elem_type return_val = 0;
+    elem_type return_val = 0;
 
 #ifdef CHICKEN
-        size_t i = 1, n = stack->n_elements + 1;
+    size_t i = 1, n = stack->n_elements + 1;
 #else
-        size_t i = 0, n = stack->n_elements;
+    size_t i = 0, n = stack->n_elements;
 #endif
 
-        for (; i < n; i++) {
+    for (; i < n; i++) {
 
-            return_val += stack->data[i] % 78;
-        }
-
-        return return_val;
+        return_val += stack->data[i] % 78;
     }
+
+    return return_val;
+}
 #endif
 
 error_code_type push_back (Stack_info *stack, const elem_type element) {
 
 
-    if (stack_check (stack))     return stack_check (stack);
+    error_code_type err = stack_check (stack);
+    if (err) return err;
 
 #ifdef CHICKEN
     size_t cur_size = stack->n_elements + N_KANAREEK;
@@ -111,10 +112,11 @@ error_code_type push_back (Stack_info *stack, const elem_type element) {
 
 error_code_type pop (Stack_info *stack, elem_type *element) {
 
-    if (stack_check (stack)) {
+    error_code_type err = stack_check (stack);
+    if (err) {
 
         *element = POISON;
-        return stack_check (stack);
+        return err;
     }
 
 #ifdef CHICKEN
@@ -136,7 +138,16 @@ error_code_type pop (Stack_info *stack, elem_type *element) {
     *element = stack->data[stack->n_elements - 1];        
 #endif
 
-    reallocate_memory (stack, cur_size - 1);
+    if (cur_size - 1 < stack->data_len / 2) {
+
+        reallocate_memory (stack, cur_size - 1);
+        stack->data_len = cur_size - 1;
+    }
+
+    else {
+
+        stack->data[cur_size - 1] = POISON;
+    }
 
     stack->n_elements--;
 
